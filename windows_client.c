@@ -4,8 +4,6 @@
 // Winsock library
 #pragma comment(lib, "ws2_32.lib")
 
-// execute: gcc server_windows.c -lws2_32 -o server_windows
-
 int main(int argc, char *argv[])
 {
     SOCKET so;
