@@ -1,2 +1,2 @@
 # Serat
-Simple chat server in C
+Simple chat server with client in C
