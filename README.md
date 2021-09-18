@@ -1,5 +1,5 @@
 # Serat
-Simple chat server with client in C
+Socket programming in C for Windows with a Server and Client example
 
 ## Installation
 ### Clone repository
@@ -8,10 +8,13 @@ git clone --recursive https://github.com/manucabral/Serat.git
 cd Serat
 ```
 
-### Build
-Run `makefile`
-
+### Usage
+Build in command line with `make`
 ```sh
-make windows_client
-make run
+make
+```
+Run server and client (with two different terminal)
+```sh
+make run_server
+make run_client
 ```
