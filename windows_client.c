@@ -6,7 +6,8 @@
 
 #define RECEIVE_BUFFER_SIZE 32
 
-void close(SOCKET so){
+void close(SOCKET so)
+{
     closesocket(so);
     WSACleanup();
     return;
@@ -23,7 +24,8 @@ int main(int argc, char *argv[])
     int bytes_received;
     struct sockaddr_in server;
 
-    if(argc != 3){
+    if (argc != 3)
+    {
         printf("Usage: %s <server_ip> <server_port>\n", argv[0]);
         return 1;
     }
@@ -45,11 +47,11 @@ int main(int argc, char *argv[])
      * SOCK_STREAM: Oriented to TCP protocol (Type)
      * 0: (Protocol)
      */
-    if((so = socket(AF_INET , SOCK_STREAM , 0 )) == INVALID_SOCKET)
-	{   
-		printf("Error on create: %d\n" , WSAGetLastError());
+    if ((so = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
+    {
+        printf("Error on create: %d\n", WSAGetLastError());
         return 1;
-	}
+    }
 
     printf("Socket created.\n");
 
@@ -70,7 +72,8 @@ int main(int argc, char *argv[])
      * (struct sockaddr *) &server: A pointer to the sockaddr structure to which the connection should be established
      * sizeof server: The lenght in bytes of the sockaddr struct.
      */
-    if (connect(so, (struct sockaddr *) &server, sizeof server) < 0){
+    if (connect(so, (struct sockaddr *)&server, sizeof server) < 0)
+    {
         printf("Failed to connect: %ld\n", WSAGetLastError());
         close(so);
         return 1;
@@ -79,23 +82,23 @@ int main(int argc, char *argv[])
     printf("Connected to %s:%d\n", server_ip, server_port);
 
     message = "ping";
-    if(send(so , message , strlen(message) , 0) < 0)
-	{
-		puts("Send failed");
+    if (send(so, message, strlen(message), 0) < 0)
+    {
+        puts("Send failed");
         close(so);
-		return 1;
-	}
+        return 1;
+    }
 
-	puts("Data Send\n");
-    if((bytes_received = recv(so , buffer , RECEIVE_BUFFER_SIZE - 1 , 0)) == SOCKET_ERROR)
-	{
-		puts("Failed on receive");  
-	}
+    puts("Data Send\n");
+    if ((bytes_received = recv(so, buffer, RECEIVE_BUFFER_SIZE - 1, 0)) == SOCKET_ERROR)
+    {
+        puts("Failed on receive");
+    }
 
-	buffer[bytes_received] = '\0';
-	puts(buffer); 
+    buffer[bytes_received] = '\0';
+    puts(buffer);
 
     closesocket(so);
-    WSACleanup();   
+    WSACleanup();
     return 0;
 }
