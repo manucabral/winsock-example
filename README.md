@@ -16,5 +16,5 @@ make
 Run server and client (with two different terminal)
 ```sh
 make run_server
-make run_client
+make run_client <server_ip> <server_port>
 ```
