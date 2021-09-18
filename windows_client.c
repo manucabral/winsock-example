@@ -6,15 +6,24 @@
 
 #define RECEIVE_BUFFER_SIZE 32
 
+void close(SOCKET so){
+    closesocket(so);
+    WSACleanup();
+    return;
+}
+
 int main(int argc, char *argv[])
 {
     SOCKET so;
     WSADATA wsa;
+    char *message;
     char *server_ip;
+    char buffer[RECEIVE_BUFFER_SIZE];
     unsigned short server_port;
+    int bytes_received;
     struct sockaddr_in server;
 
-    if(argc < 2){
+    if(argc != 3){
         printf("Usage: %s <server_ip> <server_port>\n", argv[0]);
         return 1;
     }
@@ -63,12 +72,28 @@ int main(int argc, char *argv[])
      */
     if (connect(so, (struct sockaddr *) &server, sizeof server) < 0){
         printf("Failed to connect: %ld\n", WSAGetLastError());
-        closesocket(so);
-        WSACleanup();   
+        close(so);
         return 1;
     }
 
     printf("Connected to %s:%d\n", server_ip, server_port);
+
+    message = "ping";
+    if(send(so , message , strlen(message) , 0) < 0)
+	{
+		puts("Send failed");
+        close(so);
+		return 1;
+	}
+
+	puts("Data Send\n");
+    if((bytes_received = recv(so , buffer , RECEIVE_BUFFER_SIZE - 1 , 0)) == SOCKET_ERROR)
+	{
+		puts("Failed on receive");  
+	}
+
+	buffer[bytes_received] = '\0';
+	puts(buffer); 
 
     closesocket(so);
     WSACleanup();   
