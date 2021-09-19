@@ -54,22 +54,23 @@ int main(int argc, char *argv[])
     server.sin_port = htons(port);
 
     if (bind(server_so, (struct sockaddr *)&server, sizeof(server)) == SOCKET_ERROR){
-        pritnf("Bind failed: %d", WSAGetLastError());
+        printf("Bind failed: %d", WSAGetLastError());
         close(server_so);
         return 1;
     }
 
     if (listen(server_so, MAX_PENDING) < 0){
-        pritnf("Listen failed: %d", WSAGetLastError());
+        printf("Listen failed: %d", WSAGetLastError());
         close(server_so);
         return 1;
     }
 
-    print("Waiting for incoming connections..");
+    printf("Waiting for incoming connections..");
 
     client_length = sizeof(client);
     client_so = accept(server_so, (struct sockaddr *)&client, &client_length);
-    
+    puts("Connection accepted");
+
     close(server_so);
     return 0;
 }
