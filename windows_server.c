@@ -30,13 +30,11 @@ void handle_client(int client_socket)
 
     send(client_socket, message, strlen(message) + 1, 0);
 
-    if ((receive_message_size = recv(client_socket, buffer, RECEIVE_BUFFER_SIZE, 0)) < 0)
-        error("Error on receive data.\n");
-
-    while (receive_message_size > 0)
+    while (strcmp(message, "QUIT") != 0)
     {
-        //if (send(client_socket, buffer, receive_message_size, 0) != receive_message_size)
-            //error("Send message failed.\n");
+        if ((receive_message_size = recv(client_socket, buffer, RECEIVE_BUFFER_SIZE, 0)) < 0)
+            error("Error on receive data.\n");
+
         buffer[receive_message_size] = '\0';
         printf("[TCP Client]: %s\n", buffer);
 
@@ -44,8 +42,6 @@ void handle_client(int client_socket)
         printf("[Server]: %s\n", message);
         send(client_socket, message, strlen(message) + 1, 0);
 
-        if ((receive_message_size = recv(client_socket, buffer, RECEIVE_BUFFER_SIZE, 0)) < 0)
-            error("Error on receive data.\n");
     }
 
     puts("Closing client socket..");

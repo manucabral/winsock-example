@@ -6,6 +6,13 @@
 
 #define RECEIVE_BUFFER_SIZE 32
 
+void error(char *message)
+{
+    fprintf(stderr, "%s: %d", message, WSAGetLastError());
+    exit(1);
+    return;
+}
+
 void close(SOCKET so)
 {
     closesocket(so);
@@ -17,8 +24,8 @@ int main(int argc, char *argv[])
 {
     SOCKET so;
     WSADATA wsa;
-    char *message;
     char *server_ip;
+    char message[200];
     char buffer[RECEIVE_BUFFER_SIZE];
     unsigned short server_port;
     int bytes_received;
@@ -34,10 +41,7 @@ int main(int argc, char *argv[])
     server_port = atoi(argv[2]);
 
     if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
-    {
-        printf("Error: %d\n", WSAGetLastError());
-        return 1;
-    }
+        error("Failed WSAStartup");
 
     printf("Winsock Initialised.\n");
 
@@ -48,10 +52,7 @@ int main(int argc, char *argv[])
      * 0: (Protocol)
      */
     if ((so = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
-    {
-        printf("Error on create: %d\n", WSAGetLastError());
-        return 1;
-    }
+        error("Error on created the socket");
 
     printf("Socket created.\n");
 
@@ -73,30 +74,22 @@ int main(int argc, char *argv[])
      * sizeof server: The lenght in bytes of the sockaddr struct.
      */
     if (connect(so, (struct sockaddr *)&server, sizeof server) < 0)
-    {
-        printf("Failed to connect: %ld\n", WSAGetLastError());
-        close(so);
-        return 1;
-    }
+        error("Failed to connect");
 
     printf("Connected to %s:%d\n", server_ip, server_port);
 
-    message = "ping";
-    if (send(so, message, strlen(message), 0) < 0)
+    while (strcmp(message, "QUIT") != 0)
     {
-        puts("Send failed");
-        close(so);
-        return 1;
-    }
+        if ((bytes_received = recv(so, buffer, RECEIVE_BUFFER_SIZE, 0)) == SOCKET_ERROR)
+            error("Failed on receive"); 
 
-    puts("Data Send\n");
-    if ((bytes_received = recv(so, buffer, RECEIVE_BUFFER_SIZE - 1, 0)) == SOCKET_ERROR)
-    {
-        puts("Failed on receive");
-    }
+        buffer[bytes_received] = '\0';
+        printf("[Server]: %s", buffer);
 
-    buffer[bytes_received] = '\0';
-    puts(buffer);
+        scanf("%s", message);
+        printf("[You]: %s\n", message);
+        send(so, message, strlen(message) + 1, 0);
+    }
 
     closesocket(so);
     WSACleanup();
