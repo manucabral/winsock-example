@@ -4,7 +4,7 @@ CC = gcc
 all: windows_client windows_server 
 
 windows_client: windows_client.c
-	$(CC) windows_client.c -lws2_32-o windows_client
+	$(CC) windows_client.c -lws2_32 -o windows_client
 
 windows_server: windows_server.c
 	$(CC) windows_server.c -lws2_32 -o windows_server
