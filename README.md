@@ -4,8 +4,8 @@ Socket programming in C for Windows with a Server and Client example
 ## Installation
 ### Clone repository
 ```sh
-git clone --recursive https://github.com/manucabral/Serat.git
-cd Serat
+git clone --recursive https://github.com/manucabral/winsock-example.git
+cd winsock-example
 ```
 
 ### Usage
