@@ -15,6 +15,6 @@ make
 ```
 Run server and client (with two different terminal)
 ```sh
-make run_server <server_ip> <server_port>
-make run_client <server_ip> <server_port>
+make run_server ip=127.0.0.1 port=8888
+make run_client ip=127.0.0.1 port=8888
 ```
